@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "アイテム一覧";
+}
+
+<div id="data-area">
+    <table id="item-list-table" border="1">
+        <tbody>
+            <tr>
+                <th>カテゴリー</th>
+                <th>商品名</th>
+                <th>商品概要</th>
+                <th>販売期限</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+
+            function createRow(d) {
+                return $("<tr><td>" + d.cateId + "</td><td>" + d.itemId + ":" + d.itemName + "</td><td>" + d.summary + "</td><td>" + d.limit + "</td>");
+            }
+
+            $.getJSON("/home/item")
+                .fail(function (e) {
+                    $("#item-list-table").hide();
+                    $("#data-area").html("<p>エラーが発生しました</p>");
+                    console.dir(e);
+                })
+                .success(function (data) {
+                    var tbody = $("#item-list-table tbody");
+                    _.each(data, function (d) {
+                        tbody.append(createRow(d));
+                    });
+                });
+        });
+    </script>
+}
